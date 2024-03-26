@@ -3,8 +3,8 @@ const request = require('request');
 //discord stuff setup
 const discord = require("discord.js");
 const client = new discord.Client();
-const token = process.env.DiscordBot;
-const dontdie = require("./dontdie.js");
+const token = require("./config.json").token;
+//const dontdie = require("./dontdie.js");
 //fs storage stuff setup
 const fs = require("fs");
 
