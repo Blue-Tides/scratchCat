@@ -1,13 +1,13 @@
 //request stuff setup
 const request = require('request');
 //discord stuff setup
-const discord = require("discord.js");
-const client = new discord.Client();
+const { Client, Events, GatewayIntentBits} = require("discord.js");
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const token = require("./config.json").token;
 //const dontdie = require("./dontdie.js");
 //fs storage stuff setup
 const fs = require("fs");
-
+client.login(token);
 client.on('ready', () => {
   console.log(client.user.username+" is on!");
   client.user.setActivity(`sc help and pings`, {
@@ -15,7 +15,7 @@ client.on('ready', () => {
     });    
 });
 
-client.on('message', msg => {
+client.on('messageCreate', msg => {
 if (msg.author.id != client.user.id && !msg.author.bot) {
 var re = msg.content.split(" ");
 	
@@ -320,4 +320,3 @@ function replaceAll(thing,search, replace) {
   return thing.split(search).join(replace);
 }
 
-client.login(token);
