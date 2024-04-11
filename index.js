@@ -33,14 +33,11 @@ require("./load-commands.js");
 client.login(token);
 client.on('ready', () => {
   console.log(client.user.username+" is on!");
-  client.user.setActivity(`sc help and pings`, {
-        type: 'WATCHING',
-    });    
 });
 
 client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isChatInputCommand()) return;
-  console.log(interaction.client);
+ // console.log(interaction.client);
 	const command = interaction.client.commands.get(interaction.commandName);
 
 	if (!command) {
