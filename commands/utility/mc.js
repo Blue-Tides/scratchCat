@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-
+const request=require("request");
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('mc')
@@ -9,6 +9,14 @@ module.exports = {
                 .setDescription('scratch user'))
         ,
 	async execute(interaction) {
-		await interaction.reply(`youre mother is ${interaction.options.getString('user')}`);
+		await interaction.reply(`loading...`);
+		request(`https://api.scratch.mit.edu/users/${interaction.options.getString("user")}/messages/count`, (err, resp, body) => {
+			if(resp.statusCode!=200) {interaction.editReply("An error occured."); 
+			console.log(body);
+			return;}
+			if(err) interaction.edit("Error:"+err);
+			var count = JSON.parse(body);
+			interaction.editReply(""+count.count);
+		});
 	},
 };
