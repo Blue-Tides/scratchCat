@@ -9,14 +9,20 @@ module.exports = {
 				.setDescription('scratch user'))
 	,
 	async execute(interaction) {
-		await interaction.reply(`loading...`);
+		await interaction.deferReply();
 		var count = null;
 		var mesg = null;
 		var ready = 0;
 		function send() {
+			//console.log(ready);
+			if(ready==-1) {
+			ready=-2;
+			interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true })
+			
+		};
 			if (ready != 2) return;
 			//console.log("trying to send??");
-			interaction.editReply("Messages got!");
+			//interaction.editReply("Messages got!");
 			interaction.editReply({
 				embeds: [new EmbedBuilder()
 					.setAuthor({ name: mesg.username, iconURL: mesg.profile.images["90x90"] })
@@ -25,8 +31,9 @@ module.exports = {
 		}
 		request(`https://api.scratch.mit.edu/users/${interaction.options.getString("user")}/messages/count`, (err, resp, body) => {
 			if (resp.statusCode != 200 || err) {
-				interaction.editReply("An error occured.");
 				console.log(body);
+				if(ready!=-2) ready=-1;
+				send();
 				return;
 			}
 			count = JSON.parse(body);
@@ -38,7 +45,8 @@ module.exports = {
 		});
 		request("https://api.scratch.mit.edu/users/" + interaction.options.getString("user"), (err, resp, body) => {
 			if (resp.statusCode != 200 || err) {
-				interaction.editReply("An error occured.");
+				if (ready!=-2) ready=-1;
+				send();
 				console.log(body);
 				return;
 			}
@@ -54,6 +62,7 @@ module.exports = {
 
 //code from ten years ago thats trash will rewrite
 //commafies numbers ex 123456 -> 123,456
+//to do: rewrite this
 function comma(number) {
 	var i = "" + number;
 	i = i.split("").reverse();
